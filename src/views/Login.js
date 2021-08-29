@@ -1,7 +1,8 @@
 import {
     TextInputField,
     Button, 
-    Pane
+    Pane,
+    Heading
 } from 'evergreen-ui'
 
 const LoginView = (props)=>{
@@ -12,13 +13,13 @@ const LoginView = (props)=>{
             email:data.get("email"),
             password:data.get("password")
         }
-
-        //enviar o user via AMQP para tentar realizar login
     }
 
     return (
         <Pane paddingX="40em" paddingY="20em">
-            <form onSubmit={login}>
+            <form onSubmit={login} style={{backgroundColor:"white", padding:'2em', borderRadius:'5px'}}>
+                <Heading size={900} fontFamily={'Varela Round'}>Entre Para Jogar!</Heading>
+                <br/>
                 <TextInputField name="email" type="email" label="Email" placeholder="exemplo@email.com"/>
                 <TextInputField name="password" type="password" label="Senha" placeholder="**********"/>
                 <Button 

@@ -1,4 +1,4 @@
-import './App.css';
+
 import { RoutesView } from './Routes';
 
 function App() {
