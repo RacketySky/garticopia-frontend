@@ -2,7 +2,8 @@ import {
     TextInputField,
     Button, 
     Pane,
-    toaster
+    toaster,
+    TickIcon
 } from 'evergreen-ui'
 
 const RegistrationView = (props)=>{
@@ -22,15 +23,19 @@ const RegistrationView = (props)=>{
     }
 
     return (
-        <Pane paddingX="40em" paddingY="15em">
-            <form onSubmit={registration}>
+        <Pane paddingX="40em" paddingTop="20px">
+            <h1 className="logo" style={{fontSize: '86px'}}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
+            <form onSubmit={registration} style={{backgroundColor:"white", padding:'2em', borderRadius:'5px'}}>
                 <TextInputField name="name" type="text" label="Nome" placeholder="Antônio Antoniel"/>
                 <TextInputField name="email" type="email" label="Email" placeholder="exemplo@email.com"/>
                 <TextInputField name="password" type="password" label="Senha" placeholder="**********"/>
                 <TextInputField name="password-conf" type="password" label="Confirmação de Senha" placeholder="**********"/>
-                <Button 
+                <Button
+                    width="100%"
+                    iconAfter={TickIcon}
+                    height={40}
                     appearance="primary">
-                    Login
+                    Confirmar
                 </Button>
             </form>
         </Pane>

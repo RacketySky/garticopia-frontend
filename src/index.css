@@ -1,6 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
 body {
   margin: 0;
   color:"white";
   background-color: #006bb2;
+}
+
+.logo{
+  text-align: center;
+  font-family: 'Modak';
+  margin-bottom:15px;
+  color: #FEBA00;
+  -webkit-text-stroke: 2px black;
+}
+
+.logo-blue {
+  color:#94E6FE;
+}
+
+.danger-red{
+  color:#D14343 !important;
 }
