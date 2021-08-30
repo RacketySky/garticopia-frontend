@@ -1,5 +1,7 @@
 import {
-    login
+    login,
+    getRooms,
+    client
 } from '../components/Api';
 
 import * as mqtt from 'mqtt';
@@ -111,6 +113,11 @@ const HomeView = (props)=>{
         {name:"Sala 2", capacity:10, ocupation:0, category:"estados"},
         {name:"Sala 3", capacity:10, ocupation:5, category:"esportes"},
     ];
+
+    useEffect(()=>{
+        login();
+        getRooms();
+    })
 
     return (
         <Pane paddingX="40em" paddingTop = "20px">
