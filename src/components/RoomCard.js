@@ -13,7 +13,8 @@ import {
 const RoomCardComponent = (props)=>{
     var room = props.room;
     return (
-        <Card 
+        <Card
+            key={room.roomID}
             elevation={1}
             paddingX="2em"
             paddingY="1em"
@@ -25,21 +26,21 @@ const RoomCardComponent = (props)=>{
             marginX={props.marginX}
             marginY={props.marginY}>
             <Pane width="100%">
-                <Heading>{room.name}</Heading>
+                <Heading>{room.roomName}</Heading>
                 <br/>
                 <Pane width="22%" display="flex" justifyContent="space-between">
-                    <Text className={room.ocupation == room.capacity ? "danger-red": ""}>
-                        <PeopleIcon/> <Small>{room.ocupation} </Small>
+                    <Text className={room.roomPlayers == 10 ? "danger-red": ""}>
+                        <PeopleIcon/> <Small>{room.roomPlayers} </Small>
                     </Text>
 
                     <Text>
-                        <TagIcon></TagIcon> {room.category}
+                        <TagIcon></TagIcon> {'categoria'}
                     </Text>
                 </Pane>
             </Pane>
             <Pane>
                 <Button 
-                    disabled={room.ocupation === room.capacity}
+                    disabled={room.ocupation === 10}
                     iconAfter={ArrowRightIcon} 
                     appearance="primary" 
                     intent="success">

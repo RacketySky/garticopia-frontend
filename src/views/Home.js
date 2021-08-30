@@ -1,12 +1,8 @@
 import {
-    login,
-    getRooms,
-    client
-} from '../components/Api';
+    getOpenRooms
+} from '../services/AblyBrokerService';
 
-import * as mqtt from 'mqtt';
-
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import {
     Heading,
@@ -15,109 +11,24 @@ import {
     SelectField,
     Button,
     PlusIcon
-} from 'evergreen-ui'
+} from 'evergreen-ui';
 
 import { RoomCardComponent } from '../components/RoomCard';
+import { useState } from 'react';
 
 const HomeView = (props)=>{
-    // const [client, setClient] = useState(null);
+    const [rooms, setRooms] = useState(null);
 
-    // const mqttConnect = (host, mqttOption) => {
-    //     setClient(mqtt.connect(host, mqttOption));
-    // };
-
-    // useEffect(() => {
-    //     if (client) {
-    //         console.log(client)
-    //         client.on('connect', () => {
-            
-    //         });
-    //         client.on('error', (err) => {
-    //             console.error('Connection error: ', err);
-    //             client.end();
-    //         });
-            
-    //         client.on('reconnect', () => {
-    //             console.log('reconnecting')
-    //         });
-
-    //         client.on('message', (topic, message) => {
-    //             const payload = { topic, message: message.toString() };
-    //             console.log(payload);
-    //             // setPayload(payload);
-    //         });
-    //     }else{
-    //         mqttConnect('mqtts:mqtt.ably.io',{
-    //             protocol: 'mqtts',
-    //             // clientId uniquely identifies client
-    //             // choose any string you wish
-    //             clientId: 'b0908853',
-    //             username: 'b75WYw.5VOWVQ', /* API key's name */
-    //             password: 'zxct1AniXY80WGpd', /* API key's secret */
-    //             port: 8883
-    //         });
-    //     }
-    // }, [client]);
-
-    // const mqttSub = (subscription) => {
-    //     if (client) {
-    //         const { topic, qos } = subscription;
-    //         client.subscribe(topic, { qos }, (error) => {
-    //         if (error) {
-    //             console.log('Subscribe to topics error', error)
-    //             return
-    //         }
-    //         // setIsSub(true)
-    //         });
-    //     }
-    // };
-
-    // const mqttUnSub = (subscription) => {
-    //     if (client) {
-    //         const { topic } = subscription;
-    //         client.unsubscribe(topic, error => {
-    //         if (error) {
-    //             console.log('Unsubscribe error', error)
-    //             return
-    //         }
-    //         // setIsSub(false);
-    //         });
-    //     }
-    // };
-
-    // const mqttPublish = (context) => {
-    //     if (client) {
-    //         const { topic, qos, payload } = context;
-    //         client.publish(topic, payload, { qos }, error => {
-    //             if (error) {
-    //                 console.log('Publish error: ', error);
-    //             }
-    //         });
-    //     }
-    // }
-
-    // const mqttDisconnect = () => {
-    //     if (client) {
-    //         client.end(() => {
-    //         // setConnectStatus('Connect');
-    //         });
-    //     }
-    // }
-
-    const send_message = () => {
-        login();
-    }
-
-    const rooms = [
-        {name:"Sala 1", capacity:10, ocupation:10, category:"animais"},
-        {name:"Sala 2", capacity:10, ocupation:0, category:"estados"},
-        {name:"Sala 3", capacity:10, ocupation:5, category:"esportes"},
-    ];
-
+    // solicita salas abertas para o broker
     useEffect(()=>{
-        login();
-        getRooms();
-    })
+        if(rooms == null) {
+            getOpenRooms((message)=>{
+                var r = JSON.parse(message.data).rooms;
+                console.log(r);
+                setRooms(r);
+            });
+        }
+    }, [rooms]);
 
     return (
         <Pane paddingX="40em" paddingTop = "20px">
@@ -140,7 +51,6 @@ const HomeView = (props)=>{
                     </option>
                 </SelectField>
                 <Button 
-                    onClick={send_message}
                     width="100%"
                     iconAfter={PlusIcon} 
                     appearance="primary" 
@@ -150,12 +60,14 @@ const HomeView = (props)=>{
             </Pane>
 
             {
+                rooms?
                 rooms.map(room => 
                 {
                     return (
                         <RoomCardComponent room={room} marginY={"1em"}/>
                     )
                 })
+                :<></>
             }
         </Pane>
     );
