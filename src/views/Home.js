@@ -45,7 +45,7 @@ const HomeView = (props)=>{
     const enterRoom = (roomID) =>{
         RoomService.enter({'roomID':roomID, 'userToken':Cookies.get('token')}).then(res=>{
             toaster.success("Entrando");
-            h.push('/room', {roomID:res.data.roomID});
+            h.push('/room', {roomID:roomID});
         }).catch(err =>{
             toaster.danger(err.toString());
             console.log(err);
@@ -98,7 +98,11 @@ const HomeView = (props)=>{
                 rooms.map(room => 
                 {
                     return (
-                        <RoomCardComponent key={room.roomID} room={room} marginY={"1em"} onEnter={enterRoom}/>
+                        <RoomCardComponent 
+                            key={room.roomID} 
+                            room={room} 
+                            marginY={"1em"} 
+                            onEnter={enterRoom}/>
                     )
                 })
                 :<></>
