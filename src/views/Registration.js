@@ -5,21 +5,35 @@ import {
     toaster,
     TickIcon
 } from 'evergreen-ui'
+import Cookies from 'js-cookie';
+import { useHistory } from 'react-router';
+
+import {
+    UserService
+} from '../services/Api'
 
 const RegistrationView = (props)=>{
+    const h = useHistory();
 
     const registration = (e)=>{
         e.preventDefault();
         var data = new FormData(e.target);
         var user = {
-            name:data.get("name"),
-            email:data.get("email"),
-            password:data.get("password"),
+            userName:data.get("name"),
+            userEmail:data.get("email"),
+            userPassword:data.get("password"),
         }
+        
+        if(user.userPassword !== data.get("password-conf")) return toaster.danger("As senhas informadas não batem.");
 
-        if(user.password === data.get("password-conf")) return toaster.danger("As senhas informadas não batem.");
-
-        //enviar o user via AMQP para tentar realizar cadastro
+        UserService.register(user).then(res=>{
+            Cookies.set('token', res.data.userToken);
+            toaster.success('Sucesso!');
+            h.push('/home');
+        })
+        .catch(err =>{
+            toaster.danger(err.toString());
+        });
     }
 
     return (

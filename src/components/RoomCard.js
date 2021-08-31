@@ -29,7 +29,7 @@ const RoomCardComponent = (props)=>{
                 <Heading>{room.roomName}</Heading>
                 <br/>
                 <Pane width="22%" display="flex" justifyContent="space-between">
-                    <Text className={room.roomPlayers == 10 ? "danger-red": ""}>
+                    <Text className={room.roomPlayers === 10 ? "danger-red": ""}>
                         <PeopleIcon/> <Small>{room.roomPlayers} </Small>
                     </Text>
 
@@ -40,6 +40,7 @@ const RoomCardComponent = (props)=>{
             </Pane>
             <Pane>
                 <Button 
+                    onClick={()=>props.onEnter(room.roomID)}
                     disabled={room.ocupation === 10}
                     iconAfter={ArrowRightIcon} 
                     appearance="primary" 

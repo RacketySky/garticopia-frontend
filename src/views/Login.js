@@ -3,17 +3,32 @@ import {
     Button, 
     Pane,
     Heading,
-    LogInIcon
+    LogInIcon,
+    toaster
 } from 'evergreen-ui'
+import { useHistory } from 'react-router';
+import { UserService } from '../services/Api';
+import Cookies from 'js-cookie';
 
 const LoginView = (props)=>{
+    const h = useHistory();
     const login = (e)=>{
         e.preventDefault();
+
         var data = new FormData(e.target);
         var user = {
-            email:data.get("email"),
-            password:data.get("password")
+            userEmail:data.get("email"),
+            userPassword:data.get("password")
         }
+
+        UserService.login(user).then(res=>{
+            Cookies.set('token', res.data.userToken);
+            toaster.success('Sucesso!');
+            h.push('/home');
+        }).catch(err => {   
+            toaster.danger(err.toString());
+            console.log(err);
+        });
     }
 
     return (
