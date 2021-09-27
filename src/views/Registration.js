@@ -28,10 +28,13 @@ const RegistrationView = (props)=>{
 
         UserService.register(user).then(res=>{
             Cookies.set('token', res.data.userToken);
+            Cookies.set('ID', res.data.userID);
+            Cookies.set('Username', user.userName);
             toaster.success('Sucesso!');
             h.push('/home');
         })
         .catch(err =>{
+            console.log(err.toString());
             toaster.danger(err.toString());
         });
     }

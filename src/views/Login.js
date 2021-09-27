@@ -23,6 +23,8 @@ const LoginView = (props)=>{
 
         UserService.login(user).then(res=>{
             Cookies.set('token', res.data.userToken);
+            Cookies.set('ID', res.data.userID);
+            Cookies.set('Username', res.data.userName);
             toaster.success('Sucesso!');
             h.push('/home');
         }).catch(err => {   
@@ -32,7 +34,7 @@ const LoginView = (props)=>{
     }
 
     return (
-        <Pane paddingX="40em" paddingTop="30px">
+        <Pane paddingX="25em" paddingTop="30px">
             <h1 className="logo" style={{fontSize: '86px'}}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
             <form onSubmit={login} style={{backgroundColor:"white", padding:'2em', borderRadius:'5px'}}>
                 <Heading size={800}>Entre Para Jogar!</Heading>

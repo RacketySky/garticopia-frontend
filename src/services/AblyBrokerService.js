@@ -1,4 +1,5 @@
 import * as ably from 'ably';
+import Cookies from 'js-cookie'
 
 // dados da conexao com o servidor
 const client = {
@@ -10,37 +11,36 @@ const client = {
 
 // inicia conexão do cliente ably com o servidor
 const init = () => {
+    // local API f3tY9A.5_05yA:RGdvuS_TneYKSUG5
     client.connection = ably.Realtime({'key':'b75WYw.5VOWVQ:zxct1AniXY80WGpd'});
     client.connection.connection.on('connected', ()=>console.log('Connected to Server'));
     client.connection.connection.on('disconnected', ()=> console.log('Conection Closed'))
     client.connection.connection.on('failed', ()=>console.log('Failed to Connect to Server'));
 }
 
-const getOpenRooms = (callback)=>{
+const watchRooms = (callback)=>{
     if (client.connection) {
         // cria topicos das salas e se inscreve no topico salas abertas
-        client.topics.getRooms = client.connection.channels.get("getRooms");
-        client.topics.openRooms = client.connection.channels.get("openRooms");
-
-        var request = {
-            "userToken": 1
-        }
-        //começa a ouvir o topico openRooms
-        client.topics.openRooms.subscribe('Open Rooms', (message) => callback(message));
-
-        // publica requisicao no topico getRooms
-        client.topics.getRooms.publish('GetRoomRequest', JSON.stringify(request), function(err) {
-            if (err) {
-                console.log('[ ERROR ] Could not publish getRooms request');
-                console.log(err);   
-            } else {
-                console.log('[ INFO ] getRooms request published')
-            }
-        });
+        client.topics.rooms = client.connection.channels.get("rooms", {params:{rewind:'1'}});
+        client.topics.rooms.subscribe(message => callback(message));
     }else{
         console.log('timeout');
-        setTimeout(() => getOpenRooms(callback), 500);
+        setTimeout(() => watchRooms(callback), 500);
     }
 }
 
-export {client, init, getOpenRooms};
+const watchCanvas = (roomId, callback) => {
+    if(client.connection){
+        client.topics.canvas = client.connection.channels.get(`rooms/${roomId}/canvas`, {params:{rewind:'1'}});
+        client.topics.canvas.subscribe(message => callback(message));
+    }
+}
+
+const streamCanvas = (content, roomId) =>{
+    if(client.connection) {
+        client.topics.canvas = client.connection.channels.get(`rooms/${roomId}/canvas`);
+        client.topics.canvas.publish(content);
+    }
+}
+
+export {client, init, watchRooms};
