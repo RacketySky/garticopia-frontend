@@ -8,7 +8,8 @@ body {
 .logo{
   text-align: center;
   font-family: 'Modak';
-  margin-bottom:15px;
+  margin-top:0px;
+  margin-bottom:0px;
   color: #FEBA00;
   -webkit-text-stroke: 2px black;
 }
@@ -19,4 +20,14 @@ body {
 
 .danger-red{
   color:#D14343 !important;
+}
+
+.chat{
+  text-align: center;
+}
+
+.chatHistory{
+  height: 150px;
+  background-color: white;
+  overflow: auto;
 }
