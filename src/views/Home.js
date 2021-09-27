@@ -100,7 +100,11 @@ const HomeView = (props)=>{
                 rooms.map(room => 
                 {
                     return (
-                        <RoomCardComponent key={room.roomID} room={room} marginY={"1em"} onEnter={enterRoom}/>
+                        <RoomCardComponent 
+                            key={room.roomID} 
+                            room={room} 
+                            marginY={"1em"} 
+                            onEnter={enterRoom}/>
                     )
                 })
                 :<></>
