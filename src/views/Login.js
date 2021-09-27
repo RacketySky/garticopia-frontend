@@ -4,8 +4,7 @@ import {
     Pane,
     Heading,
     LogInIcon,
-    toaster,
-    PlusIcon
+    toaster
 } from 'evergreen-ui'
 import { useHistory } from 'react-router';
 import { UserService } from '../services/Api';
@@ -43,26 +42,13 @@ const LoginView = (props)=>{
                 <TextInputField name="email" type="email" label="Email" placeholder="exemplo@email.com"/>
                 <TextInputField name="password" type="password" label="Senha" placeholder="**********"/>
                 <Button
-                    type="submit"
                     width="100%"
                     iconAfter={LogInIcon}
                     height={40}
                     appearance="primary">
                     Login
                 </Button>
-                
-                <Button
-                    type="button"
-                    marginTop={"1em"}
-                    onClick={()=>h.push('/cadastro')}
-                    width="100%"
-                    iconAfter={PlusIcon}
-                    height={40}
-                    appearance="primary">
-                    Cadastro
-                </Button>
             </form>
-            
         </Pane>
     );
 }

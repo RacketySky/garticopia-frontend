@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 //'http://localhost:3333'
 
 const instance = axios.create({
-    baseURL: 'https://garticopia-backend.herokuapp.com/',
+    baseURL: 'http://localhost:3333',
 });
 
 const options = (params = {})=>{

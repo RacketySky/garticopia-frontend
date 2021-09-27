@@ -11,8 +11,8 @@ const client = {
 
 // inicia conexão do cliente ably com o servidor
 const init = () => {
-    // local API f3tY9A.5_05yA:RGdvuS_TneYKSUG5
-    client.connection = ably.Realtime({'key':'b75WYw.5VOWVQ:zxct1AniXY80WGpd'});
+    // local API b75WYw.5VOWVQ:zxct1AniXY80WGpd
+    client.connection = ably.Realtime({'key':'f3tY9A.5_05yA:RGdvuS_TneYKSUG5'});
     client.connection.connection.on('connected', ()=>console.log('Connected to Server'));
     client.connection.connection.on('disconnected', ()=> console.log('Conection Closed'))
     client.connection.connection.on('failed', ()=>console.log('Failed to Connect to Server'));
