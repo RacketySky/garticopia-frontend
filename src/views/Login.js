@@ -4,8 +4,7 @@ import {
     Pane,
     Heading,
     LogInIcon,
-    toaster,
-    PlusIcon
+    toaster
 } from 'evergreen-ui'
 import { useHistory } from 'react-router';
 import { UserService } from '../services/Api';
@@ -24,6 +23,8 @@ const LoginView = (props)=>{
 
         UserService.login(user).then(res=>{
             Cookies.set('token', res.data.userToken);
+            Cookies.set('ID', res.data.userID);
+            Cookies.set('Username', res.data.userName);
             toaster.success('Sucesso!');
             h.push('/home');
         }).catch(err => {   
@@ -33,7 +34,7 @@ const LoginView = (props)=>{
     }
 
     return (
-        <Pane paddingX="40em" paddingTop="30px">
+        <Pane paddingX="25em" paddingTop="30px">
             <h1 className="logo" style={{fontSize: '86px'}}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
             <form onSubmit={login} style={{backgroundColor:"white", padding:'2em', borderRadius:'5px'}}>
                 <Heading size={800}>Entre Para Jogar!</Heading>
@@ -41,26 +42,13 @@ const LoginView = (props)=>{
                 <TextInputField name="email" type="email" label="Email" placeholder="exemplo@email.com"/>
                 <TextInputField name="password" type="password" label="Senha" placeholder="**********"/>
                 <Button
-                    type="submit"
                     width="100%"
                     iconAfter={LogInIcon}
                     height={40}
                     appearance="primary">
                     Login
                 </Button>
-                
-                <Button
-                    type="button"
-                    marginTop={"1em"}
-                    onClick={()=>h.push('/cadastro')}
-                    width="100%"
-                    iconAfter={PlusIcon}
-                    height={40}
-                    appearance="primary">
-                    Cadastro
-                </Button>
             </form>
-            
         </Pane>
     );
 }

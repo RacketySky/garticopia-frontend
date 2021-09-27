@@ -1,5 +1,5 @@
 import {
-    getOpenRooms
+    watchRooms
 } from '../services/AblyBrokerService';
 
 import { useEffect } from 'react';
@@ -30,12 +30,14 @@ const HomeView = (props)=>{
         var room = {
             userToken:Cookies.get('token'),
             roomName:data.get('create-room-name'),
-            roomCategory:data.get('create-room-category')
+            roomCategory:data.get('create-room-category'),
+            userID:Cookies.get('ID'),
+            userName:Cookies.get('Username')
         }
         
         RoomService.create(room).then(res=>{
             toaster.success("Entrando");
-            h.push('/room', {roomID:res.data.roomID});
+            h.push('/room', {roomID:res.data.roomID, roomStatus:res.data.roomStatus});
         })
         .catch(err =>{
             toaster.danger(err.toString());
@@ -43,9 +45,9 @@ const HomeView = (props)=>{
     }
 
     const enterRoom = (roomID) =>{
-        RoomService.enter({'roomID':roomID, 'userToken':Cookies.get('token')}).then(res=>{
+        RoomService.enter({'roomID':roomID, 'userToken':Cookies.get('token'), 'userID':Cookies.get('ID'), userName:Cookies.get('Username')}).then(res=>{
             toaster.success("Entrando");
-            h.push('/room', {roomID:roomID});
+            h.push('/room', {roomID:roomID, roomStatus:res.data.roomStatus});
         }).catch(err =>{
             toaster.danger(err.toString());
             console.log(err);
@@ -54,7 +56,7 @@ const HomeView = (props)=>{
     // solicita salas abertas para o broker
     useEffect(()=>{
         if(rooms == null) {
-            getOpenRooms((message)=>{
+            watchRooms((message)=>{
                 var r = JSON.parse(message.data).rooms;
                 console.log(r);
                 setRooms(r);
@@ -63,7 +65,7 @@ const HomeView = (props)=>{
     }, [rooms]);
 
     return (
-        <Pane paddingX="40em" paddingTop = "20px">
+        <Pane paddingX="25em" paddingTop = "20px">
             <h1 className="logo" style={{fontSize: '86px'}}>
                 <span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span>
             </h1>
@@ -98,11 +100,7 @@ const HomeView = (props)=>{
                 rooms.map(room => 
                 {
                     return (
-                        <RoomCardComponent 
-                            key={room.roomID} 
-                            room={room} 
-                            marginY={"1em"} 
-                            onEnter={enterRoom}/>
+                        <RoomCardComponent key={room.roomID} room={room} marginY={"1em"} onEnter={enterRoom}/>
                     )
                 })
                 :<></>
