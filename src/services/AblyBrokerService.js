@@ -21,7 +21,9 @@ const init = () => {
 const watchRooms = (callback)=>{
     if (client.connection) {
         // cria topicos das salas e se inscreve no topico salas abertas
-        client.topics.rooms = client.connection.channels.get("/rooms", {params:{rewind:'1'}});
+        if(!client.topics.rooms){
+            client.topics.rooms = client.connection.channels.get("/rooms", {params:{rewind:'1'}});
+        }
         client.topics.rooms.subscribe(message => callback(message));
     }else{
         console.log('timeout');
@@ -31,16 +33,73 @@ const watchRooms = (callback)=>{
 
 const watchCanvas = (roomId, callback) => {
     if(client.connection){
-        client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
-        client.topics.canvas.subscribe(message => callback(message));
+        if(!client.topics.canvas){
+            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
+        }
+            client.topics.canvas.subscribe(message => callback(message));
+    }else{
+        console.log('timeout');
+        setTimeout(() => watchCanvas(roomId, callback), 500);
     }
 }
 
 const streamCanvas = (content, roomId) =>{
-    if(client.connection) {
-        client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`);
-        client.topics.canvas.publish(content);
+    if(client.connection){
+        if(!client.topics.canvas) {
+            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
+        }
+        client.topics.canvas.publish('canvas', content, (err) => {if (err){console.error('ta dando erro' + err.toString())}});
+    }else{
+        console.log('timeout');
+        setTimeout(() => streamCanvas(content, roomId), 500);
     }
 }
 
-export {client, init, watchRooms, watchCanvas, streamCanvas};
+const watchRoomStatus = (roomId, callback) => {
+    if(client.connection){
+        if(!client.topics.roomStatus){
+            client.topics.roomStatus = client.connection.channels.get("/rooms/" + roomId);
+        }
+        client.topics.roomStatus.subscribe(roomId, message => callback(JSON.parse(message)));
+    }else{
+        console.log('timeout');
+        setTimeout(() => watchRoomStatus(roomId, callback), 500);
+    }
+}
+
+const watchAnswers = (roomId, callback) =>{
+    if(client.connection){
+        if(!client.topics.answers){
+            client.topics.answers = client.connection.channels.get("/rooms/" + roomId + "/answers");
+        }
+        client.topics.answers.subscribe(roomId, message => callback(message));    
+    }
+    else{
+            console.log('timeout');
+            setTimeout(() => watchAnswers(roomId, callback), 500);
+    }
+}
+
+const sendChatMessage = (roomId, message, errorCallback) => {
+    if(client.connection){
+        if(!client.topics.chat){
+            client.topics.chat = client.connection.channels.get("/rooms/" + roomId + "/chat");
+        }
+        client.topics.chat.publish('', message, error => errorCallback(error))
+        
+    }else{
+        console.log('timeout');
+        setTimeout(() => sendChatMessage(roomId, message,  errorCallback), 500);
+    }
+}
+
+export {
+    client,
+    init,
+    watchRooms,
+    watchCanvas,
+    streamCanvas,
+    watchAnswers,
+    watchRoomStatus,
+    sendChatMessage
+};

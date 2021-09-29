@@ -4,12 +4,13 @@ import {
 } from 'evergreen-ui'
 
 import { useEffect, useRef, useState } from 'react';
-import { streamCanvas, watchCanvas } from '../services/AblyBrokerService';
-import * as fastCompression from 'fastintcompression';
-import * as LZUTF8 from 'lzutf8';
 import {gzip, ungzip} from 'node-gzip';
+// import { streamCanvas, watchCanvas } from '../services/AblyBrokerService';
 
-const CanvasComponent = (props)=>{
+import * as LZUTF8 from 'lzutf8';
+import { streamCanvas } from '../services/AblyBrokerService';
+
+const CanvasComponentTest = (props)=>{
     const [strokeColor, setStrokeColor] = useState('#000');
     const [penSize, setPenSize] = useState(3);
     const [eraserSize, setEraserSize] = useState(6);
@@ -37,26 +38,19 @@ const CanvasComponent = (props)=>{
         context.LineCap = "round";
         contextRef.current = context;
 
-        if(!props.isDrawing){
-            watchCanvas(props.roomId, (content)=>{
-
-                var img = new Image;
-                img.onload = function(){
-                    context.drawImage(img,0,0); // Or at whatever offset you like
-                };
-                img.src = content;
-                
-                // descomprime(content)
-                // let array = new Uint8ClampedArray();
-                // let imageData = new ImageData(array, 720, 480)
-                // context.putImageData(imageData, 0 , 0);
-            });
+        if(true){
+            // watchCanvas(props.roomId, (content)=>{
+            //     // descomprime(content)
+            //     // let array = new Uint8ClampedArray();
+            //     // let imageData = new ImageData(array, 720, 480)
+            //     // context.putImageData(imageData, 0 , 0);
+            // });
         }
 
     }, []);
 
     const startDrawing = ({ nativeEvent }) => {
-        if(!props.isDrawing) return;
+        if(!true) return;
         const { offsetX, offsetY } = nativeEvent;
 
         contextRef.current.strokeStyle = strokeColor;
@@ -94,14 +88,11 @@ const CanvasComponent = (props)=>{
         }
     }
 
-    const finishDrawing = () => {
+    const finishDrawing = async () => {
         setIsDrawing(false);
         contextRef.current.closePath();
-        if(props.isDrawing) {
-            let data = canvasRef.current.toDataURL();
-            streamCanvas(data);
-            // let data = contextRef.current.getImageData(0, 0, 720, 480).data;
-            // streamCanvas(data)
+        if(true) {
+            
         }
     }
 
@@ -120,7 +111,7 @@ const CanvasComponent = (props)=>{
     return (
         <Card display='flex' padding= '1em'>
             {
-                props.isDrawing?
+                true?
                 <Pane display='flex' flexDirection='column'>
                     <input type='color' onChange={(e)=> setStrokeColor(e.target.value)}/>
                     <Pane marginY='.2em'>
@@ -219,4 +210,4 @@ const CanvasComponent = (props)=>{
     );
 }
 
-export {CanvasComponent};
+export {CanvasComponentTest};

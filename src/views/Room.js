@@ -6,7 +6,7 @@ import {
     TextInput
 } from 'evergreen-ui'
 
-import { client, getOpenRooms } from '../services/AblyBrokerService';
+import { client, getOpenRooms, sendChatMessage, watchAnswers, watchRoomStatus } from '../services/AblyBrokerService';
 
 import { PlayerCardComponent } from '../components/PlayerCard';
 import Cookies from 'js-cookie';
@@ -40,42 +40,19 @@ const RoomView = (props) => {
 
     // dados da Sala
     const [roomState, setRoomState] = useState(props.location.state.roomStatus.stage);
+
     // console.log("Room State:");
     const roomID = props.location.state.roomStatus.ID;
     // const roomID = props.location.state.roomID;
+
     // dados do historico
     var h = useHistory();
 
     // subscribe to room status topic
-    client.topics.roomStatus = client.connection.channels.get("/rooms/" + roomID);
-    client.topics.answers = client.connection.channels.get("/rooms/" + roomID + "/answers");
-    client.topics.chat = client.connection.channels.get("/rooms/" + roomID + "/chat");
+    watchRoomStatus(roomID, data => setData(data));
+    // subscribe to answers topic
+    watchAnswers(roomID, chatReponse => setMsg(chatReponse))
 
-    client.topics.roomStatus.unsubscribe()
-    client.topics.roomStatus.subscribe("" + roomID, (message) => {
-        // obtem JSON da mensagem
-        var data = JSON.parse(message.data);
-        // atualiza o status da Sala
-        // console.log("Room Status Received");
-        // console.log(data);
-        setData(data)
-    });
-    
-    client.topics.answers.unsubscribe()
-    client.topics.answers.subscribe("" + roomID, (message) => {
-        // obtem JSON da mensagem
-        var chatResponse = JSON.parse(message.data);
-        setMsg(chatResponse)
-        // if (msg !== '') {
-        //     if (chatResponse.userID !== msg.userID && chatResponse.guess !== msg.guess) {
-        //     }
-        // } else {
-        //     if (chatResponse !== undefined)
-        //         setMsg(chatResponse)
-        // }
-    });
-
-    // console.log(data)
     const exitRoom = () => {
         RoomService.exit({ 'roomID': roomID, userID: parseInt(Cookies.get('ID')) }).then(res => h.push('/home')).catch(err => console.log(err));
     }
@@ -221,7 +198,7 @@ const RoomView = (props) => {
     const onFormSubmit = (e) => {
         if (e.keyCode === 13) {
             e.preventDefault();
-            client.topics.chat.publish('', JSON.stringify({ userID: parseInt(Cookies.get('ID')), guess: chute }), function (err) {
+            sendChatMessage(JSON.stringify({ userID: parseInt(Cookies.get('ID')), guess: chute }), function (err) {
                 if (err) {
                     console.log('[ ERROR ] erro ao publicar chute');
                     console.log(err);
@@ -230,6 +207,7 @@ const RoomView = (props) => {
                     setChute('')
                 }
             });
+            
         }
     }
     const handleChange = (event) => {
