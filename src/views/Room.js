@@ -169,10 +169,12 @@ const RoomView = (props) => {
 
     //verifica se o player é o desenhista
     function playerisDrawer(data) {
-        const playerdrawer = data.currentDranwer
+        let playerdrawer = data.currentDrawer
         if (playerdrawer !== undefined) {
             if (parseInt(Cookies.get('ID')) === playerdrawer) {
                 setIsDrawer(true)
+            }else{
+                setIsDrawer(false);
             }
         }
     }
