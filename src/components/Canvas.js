@@ -4,6 +4,8 @@ import {
 } from 'evergreen-ui'
 
 import { useEffect, useRef, useState } from 'react';
+import { streamCanvas, watchCanvas } from '../services/AblyBrokerService';
+
 
 const CanvasComponent = (props)=>{
     const [strokeColor, setStrokeColor] = useState('#000');
@@ -33,9 +35,20 @@ const CanvasComponent = (props)=>{
         context.LineCap = "round";
         contextRef.current = context;
 
+        if(!props.isDrawing){
+            watchCanvas(props.roomId, (content)=>{
+                var img = new Image;
+                img.onload = function(){
+                    context.drawImage(img, 0, 0); // Or at whatever offset you like
+                };
+                img.src = content;
+            });
+        }
+
     }, []);
 
     const startDrawing = ({ nativeEvent }) => {
+        if(!props.isDrawing) return;
         const { offsetX, offsetY } = nativeEvent;
 
         contextRef.current.strokeStyle = strokeColor;
@@ -77,7 +90,7 @@ const CanvasComponent = (props)=>{
         setIsDrawing(false);
         contextRef.current.closePath();
         const data = canvasRef.current.toDataURL();
-        console.log(data);
+        streamCanvas(data, props.roomId);
     }
 
 
@@ -93,93 +106,98 @@ const CanvasComponent = (props)=>{
     }
 
     return (
-        <Card display='flex'>
-            <Pane display='flex' flexDirection='column' paddingX="1em">
-                <input type='color' onChange={(e)=> setStrokeColor(e.target.value)}/>
-                <Pane marginY='.2em'>
-                    <Popover
-                        onOpen={()=>setMode('pen')}
-                        position='top'
-                        content={
-                            <Pane textAlign='center' display='flex' flexDirection='column'>
-                                <Text>{penSize}px</Text>
-                                <input
-                                    defaultValue={penSize}
-                                    type='range'
-                                    min='1'
-                                    max='10'
-                                    step='1'
-                                    list='tickmarks'
-                                    onChange={(e)=>setPenSize(e.target.value)}/>
+        <Card display='flex' padding= '1em'>
+            {
+                props.isDrawing?
+                <Pane display='flex' flexDirection='column'>
+                    <input type='color' onChange={(e)=> setStrokeColor(e.target.value)}/>
+                    <Pane marginY='.2em'>
+                        <Popover
+                            onOpen={()=>setMode('pen')}
+                            position='top'
+                            content={
+                                <Pane textAlign='center' display='flex' flexDirection='column'>
+                                    <Text>{penSize}px</Text>
+                                    <input
+                                        defaultValue={penSize}
+                                        type='range'
+                                        min='1'
+                                        max='10'
+                                        step='1'
+                                        list='tickmarks'
+                                        onChange={(e)=>setPenSize(e.target.value)}/>
 
-                            <datalist id="tickmarks">
-                                    <option value="1" label='1'/>
-                                    <option value="2"/>
-                                    <option value="3"/>
-                                    <option value="4"/>
-                                    <option value="5" label="5"/>
-                                    <option value="6"/>
-                                    <option value="7"/>
-                                    <option value="8"/>
-                                    <option value="9"/>
-                                    <option value="10" label="10"/>
-                                </datalist>
-                            </Pane>
-                        }
-                        >
-                        <IconButton
-                        icon = {DotIcon}/> 
-                    </Popover>
+                                <datalist id="tickmarks">
+                                        <option value="1" label='1'/>
+                                        <option value="2"/>
+                                        <option value="3"/>
+                                        <option value="4"/>
+                                        <option value="5" label="5"/>
+                                        <option value="6"/>
+                                        <option value="7"/>
+                                        <option value="8"/>
+                                        <option value="9"/>
+                                        <option value="10" label="10"/>
+                                    </datalist>
+                                </Pane>
+                            }
+                            >
+                            <IconButton
+                            icon = {DotIcon}/> 
+                        </Popover>
+                        
+                        <Popover
+                            onOpen={()=>setMode('eraser')}
+                            position='top'
+                            content={
+                                <Pane textAlign='center' display='flex' flexDirection='column'>
+                                    <Text>{eraserSize}px</Text>
+                                    <input
+                                        defaultValue={eraserSize}
+                                        type='range'
+                                        min='3'
+                                        max='15'
+                                        step='1'
+                                        list='tickmarkseraser'
+                                        onChange={(e)=>setEraserSize(e.target.value)}/>
+
+                                <datalist id="tickmarkseraser">
+                                        
+                                        <option value="3" label="3"/>
+                                        <option value="4"/>
+                                        <option value="5"/>
+                                        <option value="6" label="6"/>
+                                        <option value="7"/>
+                                        <option value="8"/>
+                                        <option value="9" label="9"/>
+                                        <option value="10"/>
+                                        <option value="11"/>
+                                        <option value="12" label="12"/>
+                                        <option value="13"/>
+                                        <option value="14"/>
+                                        <option value="15" label="15"/>
+                                    </datalist>
+                                </Pane>
+                            }
+                            >
+                            <IconButton
+                                icon = {EraserIcon}/> 
+                        </Popover>
+                    </Pane>
                     
-                    <Popover
-                        onOpen={()=>setMode('eraser')}
-                        position='top'
-                        content={
-                            <Pane textAlign='center' display='flex' flexDirection='column'>
-                                <Text>{eraserSize}px</Text>
-                                <input
-                                    defaultValue={eraserSize}
-                                    type='range'
-                                    min='3'
-                                    max='15'
-                                    step='1'
-                                    list='tickmarkseraser'
-                                    onChange={(e)=>setEraserSize(e.target.value)}/>
-
-                            <datalist id="tickmarkseraser">
-                                    
-                                    <option value="3" label="3"/>
-                                    <option value="4"/>
-                                    <option value="5"/>
-                                    <option value="6" label="6"/>
-                                    <option value="7"/>
-                                    <option value="8"/>
-                                    <option value="9" label="9"/>
-                                    <option value="10"/>
-                                    <option value="11"/>
-                                    <option value="12" label="12"/>
-                                    <option value="13"/>
-                                    <option value="14"/>
-                                    <option value="15" label="15"/>
-                                </datalist>
-                            </Pane>
-                        }
-                        >
-                        <IconButton
-                            icon = {EraserIcon}/> 
-                    </Popover>
+                    <Pane>
+                        <IconButton 
+                            onClick={()=> setMode('square')}
+                            icon = {SquareIcon}/> 
+                    
+                        <IconButton 
+                            onClick={()=> setMode('circle')}
+                            icon = {CircleIcon}/> 
+                    </Pane>
                 </Pane>
-                
-                <Pane>
-                    <IconButton 
-                        onClick={()=> setMode('square')}
-                        icon = {SquareIcon}/> 
-                
-                    <IconButton 
-                        onClick={()=> setMode('circle')}
-                        icon = {CircleIcon}/> 
-                </Pane>
-            </Pane>
+                :<></>
+            }
+            
             <canvas
                 ref={canvasRef}
                 onMouseDown={startDrawing}

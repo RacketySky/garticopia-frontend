@@ -43,4 +43,4 @@ const streamCanvas = (content, roomId) =>{
     }
 }
 
-export {client, init, watchRooms};
+export {client, init, watchRooms, watchCanvas, streamCanvas};

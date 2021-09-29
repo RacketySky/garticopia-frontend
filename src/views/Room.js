@@ -25,9 +25,7 @@ import {
 } from '../services/Api'
 import { CanvasComponent } from '../components/Canvas';
 
-const RoomView = (props) => {
-
-    const [isDrawing, setIsDrawing] = useState(false);
+const RoomView = (props) => {    
     const [users, setUsers] = useState(props.location.state.roomStatus.players);
     const [drawner, setDrawner] = useState(undefined);
     const [data, setData] = useState('');
@@ -273,7 +271,7 @@ const RoomView = (props) => {
                     </Grid>
                     <Grid item xs={6}>
 
-                        <CanvasComponent />                    <br />
+                        <CanvasComponent  isDrawing={drawner} roomId = {roomID}/> <br></br>
                         <Grid className="chat">
                             <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
                                 {/* {chat.map(item => <p key={item}>{item}</p>)} */}
@@ -343,7 +341,7 @@ const RoomView = (props) => {
                     </Grid>
                     <Grid item xs={6}>
 
-                        <CanvasComponent />                    <br />
+                        <CanvasComponent  isDrawing={drawner} roomId = {roomID}/>
                         <Grid className="chat">
                             <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
                                 {
