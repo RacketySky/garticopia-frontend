@@ -51,6 +51,7 @@ const RoomView = (props) => {
     client.topics.answers = client.connection.channels.get("/rooms/" + roomID + "/answers");
     client.topics.chat = client.connection.channels.get("/rooms/" + roomID + "/chat");
 
+    client.topics.roomStatus.unsubscribe()
     client.topics.roomStatus.subscribe("" + roomID, (message) => {
         // obtem JSON da mensagem
         var data = JSON.parse(message.data);
@@ -59,7 +60,8 @@ const RoomView = (props) => {
         // console.log(data);
         setData(data)
     });
-
+    
+    client.topics.answers.unsubscribe()
     client.topics.answers.subscribe("" + roomID, (message) => {
         // obtem JSON da mensagem
         var chatResponse = JSON.parse(message.data);
