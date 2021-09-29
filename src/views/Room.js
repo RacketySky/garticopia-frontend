@@ -27,9 +27,9 @@ import { CanvasComponent } from '../components/Canvas';
 
 const RoomView = (props) => {    
     const [users, setUsers] = useState(props.location.state.roomStatus.players);
-    const [drawner, setDrawner] = useState(undefined);
+    const [drawer, setDrawer] = useState(undefined);
     const [data, setData] = useState(props.location.state.roomStatus);
-    const [isDrawner, setIsdrawner] = useState(false);
+    const [isDrawer, setIsDrawer] = useState(false);
     const [currentDraw, setCurrentDraw] = useState(undefined);
     const [playersHit, setPlayersHit] = useState([])
     const [statusGame, setStatusGame] = useState('')
@@ -93,8 +93,8 @@ const RoomView = (props) => {
     }, [data, users])
 
     useEffect(() => {
-        playerIsDrawner(data)
-    }, [drawner])
+        playerisDrawer(data)
+    }, [drawer])
 
     useEffect(() => {
         addChat(msg, users)
@@ -168,11 +168,11 @@ const RoomView = (props) => {
     }
 
     //verifica se o player é o desenhista
-    function playerIsDrawner(data) {
-        const playerDrawner = data.currentDranwer
-        if (playerDrawner !== undefined) {
-            if (parseInt(Cookies.get('ID')) === playerDrawner) {
-                setIsdrawner(true)
+    function playerisDrawer(data) {
+        const playerdrawer = data.currentDranwer
+        if (playerdrawer !== undefined) {
+            if (parseInt(Cookies.get('ID')) === playerdrawer) {
+                setIsDrawer(true)
             }
         }
     }
@@ -184,7 +184,7 @@ const RoomView = (props) => {
         if (playerid >= 0 && players !== undefined) {
             for (var i = 0; i < players.length; i++)
                 if (players[i].ID === playerid) {
-                    setDrawner(players[i])
+                    setDrawer(players[i])
                 }
         }
     }
@@ -205,7 +205,7 @@ const RoomView = (props) => {
             }
         }
     }
-    // const Drawner = props.location.state.roomStatus.currentDrawing
+    // const drawer = props.location.state.roomStatus.currentDrawing
 
 
     const useStyles = makeStyles((theme) => ({
@@ -237,7 +237,7 @@ const RoomView = (props) => {
     // console.log(currentDraw)
 
     const classes = useStyles();
-    if (isDrawner) {
+    if (isDrawer) {
         //desenhista
         return (
             <Grid
@@ -269,11 +269,11 @@ const RoomView = (props) => {
                     spacing={0}
                 >
                     <Grid item xs={3} className={classes.boxUsers}>
-                        <UsersCard Users={users} Drawner={drawner} PlayersHit={playersHit}></UsersCard>
+                        <UsersCard Users={users} drawer={drawer} PlayersHit={playersHit}></UsersCard>
                     </Grid>
                     <Grid item xs={6}>
 
-                        <CanvasComponent  isDrawing={drawner} roomId = {roomID}/> <br></br>
+                        <CanvasComponent  isDrawing={isDrawer} roomId = {roomID}/> <br></br>
                         <Grid className="chat">
                             <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
                                 {/* {chat.map(item => <p key={item}>{item}</p>)} */}
@@ -339,11 +339,11 @@ const RoomView = (props) => {
                     spacing={0}
                 >
                     <Grid item xs={3} className={classes.boxUsers}>
-                        <UsersCard Users={users} Drawner={drawner}></UsersCard>
+                        <UsersCard Users={users} drawer={drawer}></UsersCard>
                     </Grid>
                     <Grid item xs={6}>
 
-                        <CanvasComponent  isDrawing={drawner} roomId = {roomID}/>
+                        <CanvasComponent  isDrawing={isDrawer} roomId = {roomID}/>
                         <Grid className="chat">
                             <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
                                 {
