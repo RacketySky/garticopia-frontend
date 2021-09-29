@@ -21,7 +21,7 @@ const init = () => {
 const watchRooms = (callback)=>{
     if (client.connection) {
         // cria topicos das salas e se inscreve no topico salas abertas
-        client.topics.rooms = client.connection.channels.get("rooms", {params:{rewind:'1'}});
+        client.topics.rooms = client.connection.channels.get("/rooms", {params:{rewind:'1'}});
         client.topics.rooms.subscribe(message => callback(message));
     }else{
         console.log('timeout');
@@ -31,14 +31,14 @@ const watchRooms = (callback)=>{
 
 const watchCanvas = (roomId, callback) => {
     if(client.connection){
-        client.topics.canvas = client.connection.channels.get(`rooms/${roomId}/canvas`, {params:{rewind:'1'}});
+        client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
         client.topics.canvas.subscribe(message => callback(message));
     }
 }
 
 const streamCanvas = (content, roomId) =>{
     if(client.connection) {
-        client.topics.canvas = client.connection.channels.get(`rooms/${roomId}/canvas`);
+        client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`);
         client.topics.canvas.publish(content);
     }
 }
