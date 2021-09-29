@@ -89,9 +89,10 @@ const CanvasComponent = (props)=>{
     const finishDrawing = () => {
         setIsDrawing(false);
         contextRef.current.closePath();
-        // if(props.isDrawing)
-        const data = canvasRef.current.toDataURL();
-        streamCanvas(data, props.roomId);
+        if(props.isDrawing) {
+            const data = canvasRef.current.toDataURL();
+            streamCanvas(data, props.roomId);
+        }
     }
 
 
