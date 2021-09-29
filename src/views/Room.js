@@ -93,8 +93,9 @@ const RoomView = (props) => {
     }, [data, users])
 
     useEffect(() => {
+        console.log(data);
         playerisDrawer(data)
-    }, [drawer])
+    }, [data])
 
     useEffect(() => {
         addChat(msg, users)
