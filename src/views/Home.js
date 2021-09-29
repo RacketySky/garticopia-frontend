@@ -23,18 +23,17 @@ import Cookies from 'js-cookie';
 const HomeView = (props)=>{
     const [rooms, setRooms] = useState(null);
     const h = useHistory();
-
     const createRoom = (e)=>{
         e.preventDefault();
         var data = new FormData(e.target);
         var room = {
-            userToken:Cookies.get('token'),
+            // userToken:Cookies.get('token'),
             roomName:data.get('create-room-name'),
             roomCategory:data.get('create-room-category'),
-            userID:Cookies.get('ID'),
+            userID:parseInt(Cookies.get('ID')),
             userName:Cookies.get('Username')
         }
-        
+        console.log(room.userToken)
         RoomService.create(room).then(res=>{
             toaster.success("Entrando");
             h.push('/room', {roomID:res.data.roomID, roomStatus:res.data.roomStatus});
@@ -45,7 +44,7 @@ const HomeView = (props)=>{
     }
 
     const enterRoom = (roomID) =>{
-        RoomService.enter({'roomID':roomID, 'userToken':Cookies.get('token'), 'userID':Cookies.get('ID'), userName:Cookies.get('Username')}).then(res=>{
+        RoomService.enter({'roomID':parseInt(roomID), 'userID':parseInt(Cookies.get('ID')), userName:Cookies.get('Username')}).then(res=>{
             toaster.success("Entrando");
             h.push('/room', {roomID:roomID, roomStatus:res.data.roomStatus});
         }).catch(err =>{
@@ -63,7 +62,6 @@ const HomeView = (props)=>{
             });
         }
     }, [rooms]);
-
     return (
         <Pane paddingX="25em" paddingTop = "20px">
             <h1 className="logo" style={{fontSize: '86px'}}>
