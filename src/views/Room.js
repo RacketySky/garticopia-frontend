@@ -28,7 +28,7 @@ import { CanvasComponent } from '../components/Canvas';
 const RoomView = (props) => {    
     const [users, setUsers] = useState(props.location.state.roomStatus.players);
     const [drawner, setDrawner] = useState(undefined);
-    const [data, setData] = useState('');
+    const [data, setData] = useState(props.location.state.roomStatus);
     const [isDrawner, setIsdrawner] = useState(false);
     const [currentDraw, setCurrentDraw] = useState(undefined);
     const [playersHit, setPlayersHit] = useState([])
