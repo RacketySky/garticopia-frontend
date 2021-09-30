@@ -35,7 +35,7 @@ const watchRooms = (callback)=>{
 const watchCanvas = (roomId, callback) => {
     if(client.connection){
         if(!client.topics.canvas){
-            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
+            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`);
         }
         client.topics.canvas.unsubscribe();
         client.topics.canvas.subscribe(message => {console.log(message); callback(JSON.parse(message.data))});
