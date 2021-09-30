@@ -49,14 +49,14 @@ const RoomView = (props) => {
     var h = useHistory();
 
     // subscribe to room status topic
-    watchRoomStatus(roomID, data => setData(data));
+    watchRoomStatus(roomID, data => {console.log(data); setData(data)});
+
     // subscribe to answers topic
     watchAnswers(roomID, chatReponse => setMsg(chatReponse))
 
     const exitRoom = () => {
         RoomService.exit({ 'roomID': roomID, userID: parseInt(Cookies.get('ID')) }).then(res => h.push('/home')).catch(err => console.log(err));
     }
-
 
     useEffect(() => {
         setUsers(data.players)
@@ -70,7 +70,6 @@ const RoomView = (props) => {
     }, [data, users])
 
     useEffect(() => {
-        console.log(data);
         playerisDrawer(data)
     }, [data])
 

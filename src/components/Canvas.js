@@ -24,16 +24,16 @@ const CanvasComponent = (props)=>{
     /* canvas init */
     useEffect(() => {
         const canvas = canvasRef.current;
-        canvas.width = 720;
-        canvas.height = 480;
-        canvas.style.width = `${720 / 2}px`;
-        canvas.style.height = `${480 / 2}px`;
+        canvas.width = 640;
+        canvas.height = 360;
+        canvas.style.width = `${640}px`;
+        canvas.style.height = `${480}px`;
         canvas.style.backgroundColor = "white";
         canvas.style.borderRadius = "3px"
 
         const context = canvas.getContext('2d');
 
-        context.scale(2, 2);
+        context.scale(1, 1);
         context.LineCap = "round";
         contextRef.current = context;
 
@@ -45,7 +45,7 @@ const CanvasComponent = (props)=>{
                     context.drawImage(img,0,0); // Or at whatever offset you like
                 };
                 img.src = content;
-                
+
                 // descomprime(content)
                 // let array = new Uint8ClampedArray();
                 // let imageData = new ImageData(array, 720, 480)

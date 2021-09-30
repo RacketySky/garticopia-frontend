@@ -58,9 +58,10 @@ const streamCanvas = (content, roomId) =>{
 const watchRoomStatus = (roomId, callback) => {
     if(client.connection){
         if(!client.topics.roomStatus){
-            client.topics.roomStatus = client.connection.channels.get("/rooms/" + roomId);
+            client.topics.roomStatus = client.connection.channels.get("/rooms/" + roomId, {params:{rewind:'1'}});
         }
-        client.topics.roomStatus.subscribe(roomId, message => callback(JSON.parse(message)));
+        client.topics.roomStatus.unsubscribe();
+        client.topics.roomStatus.subscribe(roomId, message => callback(JSON.parse(message.data)));
     }else{
         console.log('timeout');
         setTimeout(() => watchRoomStatus(roomId, callback), 500);
@@ -72,11 +73,12 @@ const watchAnswers = (roomId, callback) =>{
         if(!client.topics.answers){
             client.topics.answers = client.connection.channels.get("/rooms/" + roomId + "/answers");
         }
-        client.topics.answers.subscribe(roomId, message => callback(message));    
+        client.topics.answers.unsubscribe();
+        client.topics.answers.subscribe(roomId, message => callback(JSON.parse(message.data)));
     }
     else{
-            console.log('timeout');
-            setTimeout(() => watchAnswers(roomId, callback), 500);
+        console.log('timeout');
+        setTimeout(() => watchAnswers(roomId, callback), 500);
     }
 }
 
