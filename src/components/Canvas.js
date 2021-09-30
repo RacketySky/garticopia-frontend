@@ -36,6 +36,7 @@ const CanvasComponent = (props)=>{
         contextRef.current = context;
 
         if(!props.isDrawing){
+            console.log('watching canvas');
             watchCanvas(props.roomId, (data)=>{
                 /* Reconstruir modo Pen ou Eraser */
                 if(mode == 'pen' || mode == 'eraser'){
@@ -53,6 +54,8 @@ const CanvasComponent = (props)=>{
                     context.closePath()
                 }
             });
+        }else{
+            console.log('not watching canvas')
         }
     }, []);
 

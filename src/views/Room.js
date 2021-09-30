@@ -198,12 +198,13 @@ const RoomView = (props) => {
     const onFormSubmit = (e) => {
         if (e.keyCode === 13) {
             e.preventDefault();
-            sendChatMessage(roomID,JSON.stringify({ userID: parseInt(Cookies.get('ID')), guess: chute }), function (err) {
+            sendChatMessage(roomID,JSON.stringify({ 'userID': parseInt(Cookies.get('ID')), 'guess': chute }), function (err) {
                 if (err) {
                     console.log('[ ERROR ] erro ao publicar chute');
                     console.log(err);
                 } else {
                     console.log('[ INFO ] chute publicado')
+                    console.log(parseInt(Cookies.get('ID')));
                     setChute('')
                 }
             });
@@ -218,155 +219,161 @@ const RoomView = (props) => {
     // console.log(currentDraw)
 
     const classes = useStyles();
-    if (isDrawer) {
-        //desenhista
-        return (
-            <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-                xs={12}
-                spacing={1}
-            >
-                <Grid item xs={12}>
-                    <h1 className="logo" style={{ fontSize: '76px' }}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
-                </Grid>
 
-                <Grid item xs={12}
+    return (
+        <Pane>
+        {
+            isDrawer? 
+                //desenhista
+                (
+                    <Grid
+                        container
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        xs={12}
+                        spacing={1}
+                    >
+                        <Grid item xs={12}>
+                            <h1 className="logo" style={{ fontSize: '76px' }}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
+                        </Grid>
 
-                    style={{ fontSize: '20px' }}
-                >
-                    <Box style={{ background: 'white', width: '80px', textAlign: 'center', borderRadius: '8px' }}><AccessTimeIcon style={{ fontSize: 20, verticalAlign: 'baseline' }}></AccessTimeIcon>05:03</Box>
-                </Grid>
-                <Grid item xs={12}>
-                    <Box style={{ fontSize: 20, background: 'white', width: '300px', textAlign: 'center', borderRadius: '8px' }}>{currentDraw}</Box>
-                </Grid>
+                        <Grid item xs={12}
 
-                <Grid container
-                    direction="row"
-                    justifyContent="center"
-                    xs={12}
-                    spacing={0}
-                >
-                    <Grid item xs={3} className={classes.boxUsers}>
-                        <UsersCard Users={users} drawer={drawer} PlayersHit={playersHit}></UsersCard>
-                    </Grid>
-                    <Grid item xs={6}>
+                            style={{ fontSize: '20px' }}
+                        >
+                            <Box style={{ background: 'white', width: '80px', textAlign: 'center', borderRadius: '8px' }}><AccessTimeIcon style={{ fontSize: 20, verticalAlign: 'baseline' }}></AccessTimeIcon>05:03</Box>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Box style={{ fontSize: 20, background: 'white', width: '300px', textAlign: 'center', borderRadius: '8px' }}>{currentDraw}</Box>
+                        </Grid>
 
-                        <CanvasComponent  isDrawing={isDrawer} roomId = {roomID}/> <br></br>
-                        <Grid className="chat">
-                            <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
-                                {/* {chat.map(item => <p key={item}>{item}</p>)} */}
-                                {
-                                    chat ?
-                                        chat.map((msg, index) => {
-                                            return (
-                                                <p key={index}><spam>{msg.userID}: </spam>{msg.info}</p>
-                                            )
-                                        })
-                                        : <></>
-                                }
+                        <Grid container
+                            direction="row"
+                            justifyContent="center"
+                            xs={12}
+                            spacing={0}
+                        >
+                            <Grid item xs={3} className={classes.boxUsers}>
+                                <UsersCard Users={users} drawer={drawer} PlayersHit={playersHit}></UsersCard>
                             </Grid>
-                            <Grid style={{ width: '768px' }}>
-                                <Pane is='form'>
-                                    <TextInput disabled width='100%' name="chat" placeholder="Você agora é o Desenhista"  />
-                                </Pane>
+                            <Grid item xs={6}>
+
+                                <CanvasComponent  isDrawing={isDrawer} roomId = {roomID}/> <br></br>
+                                <Grid className="chat">
+                                    <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
+                                        {/* {chat.map(item => <p key={item}>{item}</p>)} */}
+                                        {
+                                            chat ?
+                                                chat.map((msg, index) => {
+                                                    return (
+                                                        <p key={index}><spam>{msg.userID}: </spam>{msg.info}</p>
+                                                    )
+                                                })
+                                                : <></>
+                                        }
+                                    </Grid>
+                                    <Grid style={{ width: '768px' }}>
+                                        <Pane is='form'>
+                                            <TextInput disabled width='100%' name="chat" placeholder="Você agora é o Desenhista"  />
+                                        </Pane>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid>
+                            <Button
+                                onClick={exitRoom}
+                                intent="danger"
+                                appearance="primary"
+                                iconAfter={LogOutIcon}>
+                                Sair da Sala
+                            </Button>
+                        </Grid>
+                    </Grid>
+                )
+            : 
+            //outros jogadores
+            (
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    xs={12}
+                    spacing={1}
+                >
+                    <Grid item xs={12}>
+                        <h1 className="logo" style={{ fontSize: '86px' }}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
+                    </Grid>
+
+                    <Grid item xs={12}
+
+                        style={{ fontSize: '20px' }}
+                    >
+                        <Box style={{ background: 'white', width: '80px', textAlign: 'center', borderRadius: '8px' }}><AccessTimeIcon style={{ fontSize: 20, verticalAlign: 'baseline' }}></AccessTimeIcon>05:03</Box>
+                    </Grid>
+                    <Grid item xs={12}>
+
+                    </Grid>
+
+                    <Grid container
+                        direction="row"
+                        justifyContent="center"
+                        // alignItems="center"
+                        xs={12}
+                        spacing={0}
+                    >
+                        <Grid item xs={3} className={classes.boxUsers}>
+                            <UsersCard Users={users} drawer={drawer}></UsersCard>
+                        </Grid>
+                        <Grid item xs={6}>
+
+                            <CanvasComponent  isDrawing={isDrawer} roomId = {roomID}/>
+                            <Grid className="chat">
+                                <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
+                                    {
+                                        verificaTamanho(chat) ?
+                                            chat.map((msg, index) => {
+                                                return (
+                                                    <p key={index}><spam>{msg.userID}: </spam>{msg.info}</p>
+                                                )
+                                            })
+                                            : <></>
+                                    }
+                                </Grid>
+                                <Grid style={{ width: '768px' }}>
+                                    {/* <Pane is='form' >
+                                        <TextInput width='100%' name="chat" onKeyDown={onFormSubmit} placeholder="Escreva aqui uma resposta" onChange={e => setValue(e.target.value)} value={value} />
+                                    </Pane> */}
+                                    <Pane is='form'>
+                                        <TextInput disabled={isD} width='100%' name="chat" onKeyDown={onFormSubmit} placeholder="Escreva aqui uma resposta" onChange={e => setChute(e.target.value)} value={chute} />
+                                    </Pane>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-                <Grid>
-                    <Button
-                        onClick={exitRoom}
-                        intent="danger"
-                        appearance="primary"
-                        iconAfter={LogOutIcon}>
-                        Sair da Sala
-                    </Button>
-                </Grid>
-            </Grid>
-        );
-    } else {
-        //outros jogadores
-        return (
-            <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-                xs={12}
-                spacing={1}
-            >
-                <Grid item xs={12}>
-                    <h1 className="logo" style={{ fontSize: '86px' }}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
-                </Grid>
-
-                <Grid item xs={12}
-
-                    style={{ fontSize: '20px' }}
-                >
-                    <Box style={{ background: 'white', width: '80px', textAlign: 'center', borderRadius: '8px' }}><AccessTimeIcon style={{ fontSize: 20, verticalAlign: 'baseline' }}></AccessTimeIcon>05:03</Box>
-                </Grid>
-                <Grid item xs={12}>
-
-                </Grid>
-
-                <Grid container
-                    direction="row"
-                    justifyContent="center"
-                    // alignItems="center"
-                    xs={12}
-                    spacing={0}
-                >
-                    <Grid item xs={3} className={classes.boxUsers}>
-                        <UsersCard Users={users} drawer={drawer}></UsersCard>
-                    </Grid>
-                    <Grid item xs={6}>
-
-                        <CanvasComponent  isDrawing={isDrawer} roomId = {roomID}/>
-                        <Grid className="chat">
-                            <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
-                                {
-                                    verificaTamanho(chat) ?
-                                        chat.map((msg, index) => {
-                                            return (
-                                                <p key={index}><spam>{msg.userID}: </spam>{msg.info}</p>
-                                            )
-                                        })
-                                        : <></>
-                                }
-                            </Grid>
-                            <Grid style={{ width: '768px' }}>
-                                {/* <Pane is='form' >
-                                    <TextInput width='100%' name="chat" onKeyDown={onFormSubmit} placeholder="Escreva aqui uma resposta" onChange={e => setValue(e.target.value)} value={value} />
-                                </Pane> */}
-                                <Pane is='form'>
-                                    <TextInput disabled={isD} width='100%' name="chat" onKeyDown={onFormSubmit} placeholder="Escreva aqui uma resposta" onChange={e => setChute(e.target.value)} value={chute} />
-                                </Pane>
-                            </Grid>
-                        </Grid>
+                    <Grid>
+                        <Button
+                            onClick={exitRoom}
+                            intent="danger"
+                            appearance="primary"
+                            iconAfter={LogOutIcon}>
+                            Sair da Sala
+                        </Button>
+                        <Button
+                            onClick={startRoom}
+                            intent="danger"
+                            appearance="primary"
+                            iconAfter={LogOutIcon}>
+                            Começar jogo
+                        </Button>
                     </Grid>
                 </Grid>
-                <Grid>
-                    <Button
-                        onClick={exitRoom}
-                        intent="danger"
-                        appearance="primary"
-                        iconAfter={LogOutIcon}>
-                        Sair da Sala
-                    </Button>
-                    <Button
-                        onClick={startRoom}
-                        intent="danger"
-                        appearance="primary"
-                        iconAfter={LogOutIcon}>
-                        Começar jogo
-                    </Button>
-                </Grid>
-            </Grid>
-        )
-    }
+            )
+        
+        }
+        </Pane>);
 }
 
 export { RoomView };
