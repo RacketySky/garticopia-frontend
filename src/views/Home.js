@@ -74,13 +74,13 @@ const HomeView = (props)=>{
                     <TextInputField name='create-room-name' label="Nome"/>
                     <SelectField label="Categoria" name='create-room-category' defaultValue="animais">
                         <option value="animais"> 
-                            Animais
+                            Esportes
                         </option>
                         <option value="estados">
-                            Estados
+                            Comidas
                         </option>
                         <option value="esportes">
-                            Esportes
+                            Verbos
                         </option>
                     </SelectField>
                     <Button 
