@@ -82,7 +82,7 @@ const RoomView = (props) => {
 
         if (msg !== undefined) {
             let msgString = ''
-            if (msg.userID === Cookies.defaults.get('ID')) {
+            if (msg.userID === Cookies.get('ID')) {
                 msgString += 'Você'
                 if (msg.info === 'Acertou') {
                     msgString += ' Acertou'
