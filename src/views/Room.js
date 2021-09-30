@@ -196,7 +196,7 @@ const RoomView = (props) => {
     }));
 
     const onFormSubmit = (e) => {
-        if (e.keyCode === 13) {
+        // if (e.keyCode === 13) {
             e.preventDefault();
             console.log(Cookies.get('ID'))
             console.log(chute)
@@ -211,7 +211,7 @@ const RoomView = (props) => {
                 }
             });
 
-        }
+        // }
     }
     const handleChange = (event) => {
         event.preventDefault()
@@ -328,8 +328,8 @@ const RoomView = (props) => {
                                             {/* <Pane is='form' >
                                         <TextInput width='100%' name="chat" onKeyDown={onFormSubmit} placeholder="Escreva aqui uma resposta" onChange={e => setValue(e.target.value)} value={value} />
                                     </Pane> */}
-                                            <Pane is='form'>
-                                                <TextInput disabled={isD} width='100%' name="chat" onKeyDown={onFormSubmit} placeholder="Escreva aqui uma resposta" onChange={e => setChute(e.target.value)} value={chute} />
+                                            <Pane is='form' onSubmit={onFormSubmit}>
+                                                <TextInput disabled={isD} width='100%' name="chat"  placeholder="Escreva aqui uma resposta" onChange={e => setChute(e.target.value)} value={chute} />
                                             </Pane>
                                         </Grid>
                                     </Grid>
@@ -353,7 +353,6 @@ const RoomView = (props) => {
                             </Grid>
                         </Grid>
                     )
-
             }
         </Pane>);
 }

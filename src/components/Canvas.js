@@ -18,6 +18,10 @@ const CanvasComponent = (props)=>{
     const contextRef = useRef(null);
     const [isDrawing, setIsDrawing] = useState(false);
 
+    useEffect(()=>{
+        if(!contextRef.current) return;
+        contextRef.current.clearRect(0, 0, 1280, 720);
+    }, [props.stage]);
 
     /* canvas init */
     useEffect(() => {
@@ -34,7 +38,7 @@ const CanvasComponent = (props)=>{
         context.scale(2, 2);
         context.LineCap = "round";
         contextRef.current = context;
-
+        
         if(!props.isDrawing){
             console.log('watching canvas');
             watchCanvas(props.roomId, (data)=>{
@@ -72,7 +76,7 @@ const CanvasComponent = (props)=>{
         }else{
             console.log('not watching canvas')
         }
-    }, [props, props.isDrawing]);
+    }, [props.isDrawing]);
 
     const startDrawing = ({ nativeEvent }) => {
         if(!props.isDrawing) return;
