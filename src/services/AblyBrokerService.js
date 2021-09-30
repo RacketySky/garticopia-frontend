@@ -72,7 +72,7 @@ const streamCanvas = (content, roomId) =>{
 const watchRoomStatus = (roomId, callback) => {
     if(client.connection){
         if(!client.topics.roomStatus){
-            client.topics.roomStatus = client.connection.channels.get("/rooms/" + roomId);
+            client.topics.roomStatus = client.connection.channels.get("/rooms/" + roomId, {params:{rewind:'1'}});
         }
         client.topics.roomStatus.unsubscribe();
         client.topics.roomStatus.subscribe(roomId, message => callback(JSON.parse(message.data)));
