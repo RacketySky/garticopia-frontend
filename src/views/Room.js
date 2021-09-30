@@ -19,6 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import UsersCard from '../components/UserCard';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import { Input } from '@material-ui/core';
+import Chat from '../components/chat'
 
 import {
     RoomService
@@ -82,7 +83,7 @@ const RoomView = (props) => {
 
         if (msg !== undefined) {
             let msgString = ''
-            if (msg.userID === Cookies.get('ID')) {
+            if (msg.userID === parseInt(Cookies.get('ID'))) {
                 msgString += 'Você'
                 if (msg.info === 'Acertou') {
                     msgString += ' Acertou'
@@ -103,6 +104,7 @@ const RoomView = (props) => {
                 }
             }
             setChat(chat => [...chat, msgString])
+            setMsg(undefined)
         }
     }
 
@@ -196,7 +198,9 @@ const RoomView = (props) => {
     const onFormSubmit = (e) => {
         if (e.keyCode === 13) {
             e.preventDefault();
-            sendChatMessage(roomID, JSON.stringify({ 'userID': parseInt(Cookies.get('ID')), 'guess': chute }), function (err) {
+            console.log(Cookies.get('ID'))
+            console.log(chute)
+            sendChatMessage(roomID, JSON.stringify({ userID: parseInt(Cookies.get('ID')), guess: chute }), function (err) {
                 if (err) {
                     console.log('[ ERROR ] erro ao publicar chute');
                     console.log(err);
@@ -259,18 +263,8 @@ const RoomView = (props) => {
 
                                     <CanvasComponent isDrawing={isDrawer} roomId={roomID} stage={data.stage} /> <br></br>
                                     <Grid className="chat">
-                                        <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
-                                            {/* {chat.map(item => <p key={item}>{item}</p>)} */}
-                                            {
-                                                chat ?
-                                                    chat.map((msg, index) => {
-                                                        return (
-                                                            <p key={index}><spam>{msg.userID}: </spam>{msg.info}</p>
-                                                        )
-                                                    })
-                                                    : <></>
-                                            }
-                                        </Grid>
+                                        {/* chat aqui */}
+                                        <Chat chat={chat}></Chat>
                                         <Grid style={{ width: '768px' }}>
                                             <Pane is='form'>
                                                 <TextInput disabled width='100%' name="chat" placeholder="Você agora é o Desenhista" />
@@ -329,17 +323,7 @@ const RoomView = (props) => {
 
                                     <CanvasComponent isDrawing={isDrawer} roomId={roomID} stage={data.stage} />
                                     <Grid className="chat">
-                                        <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
-                                            {
-                                                verificaTamanho(chat) ?
-                                                    chat.map((msg, index) => {
-                                                        return (
-                                                            <p key={index}><spam>{msg.userID}: </spam>{msg.info}</p>
-                                                        )
-                                                    })
-                                                    : <></>
-                                            }
-                                        </Grid>
+                                        <Chat chat={chat}></Chat>
                                         <Grid style={{ width: '768px' }}>
                                             {/* <Pane is='form' >
                                         <TextInput width='100%' name="chat" onKeyDown={onFormSubmit} placeholder="Escreva aqui uma resposta" onChange={e => setValue(e.target.value)} value={value} />

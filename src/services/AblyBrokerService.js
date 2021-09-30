@@ -101,7 +101,7 @@ const sendChatMessage = (roomId, message, errorCallback) => {
         if(!client.topics.chat){
             client.topics.chat = client.connection.channels.get("/rooms/" + roomId + "/chat");
         }
-        client.topics.chat.publish('', JSON.stringify(message), error => errorCallback(error))
+        client.topics.chat.publish('', message, error => errorCallback(error))
         
     }else{
         console.log('timeout');
