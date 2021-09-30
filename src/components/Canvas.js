@@ -57,10 +57,12 @@ const CanvasComponent = (props)=>{
         }else{
             console.log('not watching canvas')
         }
-    }, []);
+    }, [props, props.isDrawing]);
 
     const startDrawing = ({ nativeEvent }) => {
         if(!props.isDrawing) return;
+        if(props.stage !== 'drawing') return;
+
         const { offsetX, offsetY } = nativeEvent;
 
         contextRef.current.strokeStyle = strokeColor;
@@ -112,6 +114,8 @@ const CanvasComponent = (props)=>{
 
     const draw = ({ nativeEvent }) => {
         if (!isDrawing) return;
+        if(props.stage !== 'drawing') return;
+        
         const { offsetX, offsetY } = nativeEvent;
 
         if(mode == 'pen' || mode == 'eraser'){

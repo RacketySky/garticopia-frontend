@@ -259,7 +259,7 @@ const RoomView = (props) => {
                             </Grid>
                             <Grid item xs={6}>
 
-                                <CanvasComponent  isDrawing={isDrawer} roomId = {roomID}/> <br></br>
+                                <CanvasComponent  isDrawing={isDrawer} roomId = {roomID} stage = {data.stage}/> <br></br>
                                 <Grid className="chat">
                                     <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
                                         {/* {chat.map(item => <p key={item}>{item}</p>)} */}
@@ -329,7 +329,7 @@ const RoomView = (props) => {
                         </Grid>
                         <Grid item xs={6}>
 
-                            <CanvasComponent  isDrawing={isDrawer} roomId = {roomID}/>
+                            <CanvasComponent  isDrawing={isDrawer} roomId = {roomID} stage = {data.stage}/>
                             <Grid className="chat">
                                 <Grid style={{ width: '768px' }} borderRadius='4px' className="chatHistory">
                                     {
