@@ -197,11 +197,7 @@ const RoomView = (props) => {
     const onFormSubmit = (e) => {
         if (e.keyCode === 13) {
             e.preventDefault();
-<<<<<<< Updated upstream
-            sendChatMessage({ userID: parseInt(Cookies.get('ID')), guess: chute }, function (err) {
-=======
             sendChatMessage(roomID,JSON.stringify({ userID: parseInt(Cookies.get('ID')), guess: chute }), function (err) {
->>>>>>> Stashed changes
                 if (err) {
                     console.log('[ ERROR ] erro ao publicar chute');
                     console.log(err);
