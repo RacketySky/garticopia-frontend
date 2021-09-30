@@ -72,14 +72,14 @@ const HomeView = (props)=>{
                 <form onSubmit={createRoom}>
                     <Heading textAlign="center" size={700}> Criar Sala</Heading>
                     <TextInputField name='create-room-name' label="Nome"/>
-                    <SelectField label="Categoria" name='create-room-category' defaultValue="animais">
-                        <option value="animais"> 
+                    <SelectField label="Categoria" name='create-room-category' defaultValue="Esportes">
+                        <option value="Esportes"> 
                             Esportes
                         </option>
-                        <option value="estados">
+                        <option value="Comidas">
                             Comidas
                         </option>
-                        <option value="esportes">
+                        <option value="Verbos">
                             Verbos
                         </option>
                     </SelectField>
