@@ -6,7 +6,7 @@ import {
     TextInput
 } from 'evergreen-ui'
 
-import { client, getOpenRooms, sendChatMessage, watchAnswers, watchRoomStatus } from '../services/AblyBrokerService';
+import { client, getOpenRooms, sendChatMessage, unwatchCanvas, watchAnswers, watchRoomStatus } from '../services/AblyBrokerService';
 
 import { PlayerCardComponent } from '../components/PlayerCard';
 import Cookies from 'js-cookie';
@@ -149,7 +149,8 @@ const RoomView = (props) => {
         let playerdrawer = data.currentDrawer
         if (playerdrawer !== undefined) {
             if (parseInt(Cookies.get('ID')) === playerdrawer) {
-                setIsDrawer(true)
+                setIsDrawer(true);
+                unwatchCanvas(props.roomId);
             }else{
                 setIsDrawer(false);
             }

@@ -48,7 +48,7 @@ const watchCanvas = (roomId, callback) => {
 const unwatchCanvas = (roomId) => {
     if(client.connection){
         if(!client.topics.canvas){
-            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
+            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`);
         }
         client.topics.canvas.unsubscribe();
     }else{
@@ -60,7 +60,7 @@ const unwatchCanvas = (roomId) => {
 const streamCanvas = (content, roomId) =>{
     if(client.connection){
         if(!client.topics.canvas) {
-            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
+            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`);
         }
         client.topics.canvas.publish('canvas', JSON.stringify(content), (err) => {if (err){console.error('ta dando erro' + err.toString())}});
     }else{
@@ -72,7 +72,7 @@ const streamCanvas = (content, roomId) =>{
 const watchRoomStatus = (roomId, callback) => {
     if(client.connection){
         if(!client.topics.roomStatus){
-            client.topics.roomStatus = client.connection.channels.get("/rooms/" + roomId, {params:{rewind:'1'}});
+            client.topics.roomStatus = client.connection.channels.get("/rooms/" + roomId);
         }
         client.topics.roomStatus.unsubscribe();
         client.topics.roomStatus.subscribe(roomId, message => callback(JSON.parse(message.data)));

@@ -53,8 +53,6 @@ const CanvasComponent = (props)=>{
                     context.closePath()
                 }
             });
-        }else{
-            unwatchCanvas(props.roomId);
         }
     }, []);
 
