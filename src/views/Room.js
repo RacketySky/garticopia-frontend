@@ -80,8 +80,7 @@ const RoomView = (props) => {
 
 
     function addChat(msg, users) {
-
-        if (msg !== undefined) {
+        if (msg !== undefined && msg !=='') {
             let msgString = ''
             if (msg.userID === parseInt(Cookies.get('ID'))) {
                 msgString += 'Você'
