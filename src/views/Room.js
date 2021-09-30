@@ -238,13 +238,6 @@ const RoomView = (props) => {
                             <Grid item xs={12}>
                                 <h1 className="logo" style={{ fontSize: '76px' }}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
                             </Grid>
-
-                            <Grid item xs={12}
-
-                                style={{ fontSize: '20px' }}
-                            >
-                                <Box style={{ background: 'white', width: '80px', textAlign: 'center', borderRadius: '8px' }}><AccessTimeIcon style={{ fontSize: 20, verticalAlign: 'baseline' }}></AccessTimeIcon>05:03</Box>
-                            </Grid>
                             <Grid item xs={12}>
                                 <Box style={{ fontSize: 20, background: 'white', width: '300px', textAlign: 'center', borderRadius: '8px' }}>{currentDraw}</Box>
                             </Grid>
@@ -296,16 +289,6 @@ const RoomView = (props) => {
                         >
                             <Grid item xs={12}>
                                 <h1 className="logo" style={{ fontSize: '86px' }}><span className="logo-blue">G</span>arti<span className="logo-blue">cópia</span></h1>
-                            </Grid>
-
-                            <Grid item xs={12}
-
-                                style={{ fontSize: '20px' }}
-                            >
-                                <Box style={{ background: 'white', width: '80px', textAlign: 'center', borderRadius: '8px' }}><AccessTimeIcon style={{ fontSize: 20, verticalAlign: 'baseline' }}></AccessTimeIcon>05:03</Box>
-                            </Grid>
-                            <Grid item xs={12}>
-
                             </Grid>
 
                             <Grid container
