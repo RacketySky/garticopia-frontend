@@ -47,6 +47,7 @@ const CanvasComponent = (props)=>{
                             context.beginPath();
                         }else{
                             context.lineTo(pos[0], pos[1]);
+                            context.stroke();
                         }
                     }
                     context.closePath()
