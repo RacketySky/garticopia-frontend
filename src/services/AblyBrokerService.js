@@ -24,6 +24,7 @@ const watchRooms = (callback)=>{
         if(!client.topics.rooms){
             client.topics.rooms = client.connection.channels.get("/rooms", {params:{rewind:'1'}});
         }
+        client.topics.rooms.unsubscribe();
         client.topics.rooms.subscribe(message => callback(message));
     }else{
         console.log('timeout');
@@ -36,10 +37,23 @@ const watchCanvas = (roomId, callback) => {
         if(!client.topics.canvas){
             client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
         }
-            client.topics.canvas.subscribe(message => callback(message));
+        client.topics.canvas.unsubscribe();
+        client.topics.canvas.subscribe(message => {console.log(message); callback(JSON.parse(message.data))});
     }else{
         console.log('timeout');
         setTimeout(() => watchCanvas(roomId, callback), 500);
+    }
+}
+
+const unwatchCanvas = (roomId) => {
+    if(client.connection){
+        if(!client.topics.canvas){
+            client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
+        }
+        client.topics.canvas.unsubscribe();
+    }else{
+        console.log('timeout');
+        setTimeout(() => unwatchCanvas(roomId), 500);
     }
 }
 
@@ -48,7 +62,7 @@ const streamCanvas = (content, roomId) =>{
         if(!client.topics.canvas) {
             client.topics.canvas = client.connection.channels.get(`/rooms/${roomId}/canvas`, {params:{rewind:'1'}});
         }
-        client.topics.canvas.publish('canvas', content, (err) => {if (err){console.error('ta dando erro' + err.toString())}});
+        client.topics.canvas.publish('canvas', JSON.stringify(content), (err) => {if (err){console.error('ta dando erro' + err.toString())}});
     }else{
         console.log('timeout');
         setTimeout(() => streamCanvas(content, roomId), 500);
@@ -87,7 +101,7 @@ const sendChatMessage = (roomId, message, errorCallback) => {
         if(!client.topics.chat){
             client.topics.chat = client.connection.channels.get("/rooms/" + roomId + "/chat");
         }
-        client.topics.chat.publish('', message, error => errorCallback(error))
+        client.topics.chat.publish('', JSON.stringify(message), error => errorCallback(error))
         
     }else{
         console.log('timeout');
@@ -103,5 +117,6 @@ export {
     streamCanvas,
     watchAnswers,
     watchRoomStatus,
-    sendChatMessage
+    sendChatMessage,
+    unwatchCanvas
 };

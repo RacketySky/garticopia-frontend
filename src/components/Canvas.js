@@ -4,12 +4,10 @@ import {
 } from 'evergreen-ui'
 
 import { useEffect, useRef, useState } from 'react';
-import { streamCanvas, watchCanvas } from '../services/AblyBrokerService';
-import * as fastCompression from 'fastintcompression';
-import * as LZUTF8 from 'lzutf8';
-import {gzip, ungzip} from 'node-gzip';
+import { streamCanvas, unwatchCanvas, watchCanvas } from '../services/AblyBrokerService';
 
 const CanvasComponent = (props)=>{
+    const [currentCanvasMessage, setCurrentCanvasMessage] = useState([]);
     const [strokeColor, setStrokeColor] = useState('#000');
     const [penSize, setPenSize] = useState(3);
     const [eraserSize, setEraserSize] = useState(6);
@@ -24,35 +22,39 @@ const CanvasComponent = (props)=>{
     /* canvas init */
     useEffect(() => {
         const canvas = canvasRef.current;
-        canvas.width = 640;
-        canvas.height = 360;
-        canvas.style.width = `${640}px`;
-        canvas.style.height = `${360}px`;
+        canvas.width = 1280;
+        canvas.height = 720;
+        canvas.style.width = `${1280 / 2}px`;
+        canvas.style.height = `${720 / 2}px`;
         canvas.style.backgroundColor = "white";
         canvas.style.borderRadius = "3px"
 
         const context = canvas.getContext('2d');
 
-        context.scale(1, 1);
+        context.scale(2, 2);
         context.LineCap = "round";
         contextRef.current = context;
 
         if(!props.isDrawing){
-            watchCanvas(props.roomId, (content)=>{
-
-                var img = new Image;
-                img.onload = function(){
-                    context.drawImage(img,0,0); // Or at whatever offset you like
-                };
-                img.src = content;
-
-                // descomprime(content)
-                // let array = new Uint8ClampedArray();
-                // let imageData = new ImageData(array, 720, 480)
-                // context.putImageData(imageData, 0 , 0);
+            watchCanvas(props.roomId, (data)=>{
+                /* Reconstruir modo Pen ou Eraser */
+                if(mode == 'pen' || mode == 'eraser'){
+                    mode == 'pen'? context.globalCompositeOperation="source-over": context.globalCompositeOperation="destination-out";
+                    for (let i = 0; i < data.positions.length; i++){
+                        let pos = data.positions[i];
+                        if(i == 0){
+                            context.moveTo(pos[0], pos[1]);
+                            context.beginPath();
+                        }else{
+                            context.lineTo(pos[0], pos[1]);
+                        }
+                    }
+                    context.closePath()
+                }
             });
+        }else{
+            unwatchCanvas(props.roomId);
         }
-
     }, []);
 
     const startDrawing = ({ nativeEvent }) => {
@@ -98,10 +100,10 @@ const CanvasComponent = (props)=>{
         setIsDrawing(false);
         contextRef.current.closePath();
         if(props.isDrawing) {
-            let data = canvasRef.current.toDataURL();
-            streamCanvas(data);
-            // let data = contextRef.current.getImageData(0, 0, 720, 480).data;
-            // streamCanvas(data)
+            if(mode == 'pen'|| mode == 'eraser')
+                if(currentCanvasMessage.length < 1) return;
+            streamCanvas({'positions':currentCanvasMessage, 'color':strokeColor, 'mode':mode});
+            setCurrentCanvasMessage([]);
         }
     }
 
@@ -111,7 +113,9 @@ const CanvasComponent = (props)=>{
         const { offsetX, offsetY } = nativeEvent;
 
         if(mode == 'pen' || mode == 'eraser'){
-            
+            let cm = [...currentCanvasMessage];
+            cm.push([offsetX, offsetY]);
+            setCurrentCanvasMessage(cm);
             contextRef.current.lineTo(offsetX, offsetY);
             contextRef.current.stroke()
         }
