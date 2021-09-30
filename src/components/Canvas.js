@@ -39,8 +39,12 @@ const CanvasComponent = (props)=>{
             console.log('watching canvas');
             watchCanvas(props.roomId, (data)=>{
                 /* Reconstruir modo Pen ou Eraser */
-                if(mode == 'pen' || mode == 'eraser'){
-                    mode == 'pen'? context.globalCompositeOperation="source-over": context.globalCompositeOperation="destination-out";
+                context.strokeStyle = data.color;
+                context.lineWidth = data.lineWidth?data.lineWidth:3;
+                
+                if(data.mode == 'pen' || data.mode == 'eraser'){
+                    data.mode == 'pen'? context.globalCompositeOperation="source-over": context.globalCompositeOperation="destination-out";
+                    
                     for (let i = 0; i < data.positions.length; i++){
                         let pos = data.positions[i];
                         if(i == 0){
@@ -51,7 +55,18 @@ const CanvasComponent = (props)=>{
                             context.stroke();
                         }
                     }
-                    context.closePath()
+                    context.closePath();
+                    
+                }else if(data.mode == 'circle'){
+                    contextRef.current.globalCompositeOperation="source-over";
+                    contextRef.current.beginPath();
+                    contextRef.current.arc(data.posistions[0][0], data.posistions[0][1], 50, 0, 2*Math.PI);
+                    contextRef.current.stroke();
+                }else if (data.mode == 'square'){
+                    contextRef.current.globalCompositeOperation="source-over";
+                    contextRef.current.beginPath();
+                    contextRef.current.rect(data.posistions[0][0], data.posistions[0][1], 100, 100);
+                    contextRef.current.stroke();
                 }
             });
         }else{
@@ -104,9 +119,12 @@ const CanvasComponent = (props)=>{
         setIsDrawing(false);
         contextRef.current.closePath();
         if(props.isDrawing) {
-            if(mode == 'pen'|| mode == 'eraser')
+            if(mode == 'pen'|| mode == 'eraser'){
                 if(currentCanvasMessage.length < 1) return;
-            streamCanvas({'positions':currentCanvasMessage, 'color':strokeColor, 'mode':mode});
+                streamCanvas({'positions':currentCanvasMessage, 'color':strokeColor, 'mode':mode, 'lineWidth':mode=='pen'?penSize:eraserSize});
+            }else{
+                streamCanvas({'positions':currentCanvasMessage, 'color':strokeColor, 'mode':mode, 'lineWidth':3});
+            }
             setCurrentCanvasMessage([]);
         }
     }
