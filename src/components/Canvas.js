@@ -27,7 +27,7 @@ const CanvasComponent = (props)=>{
         canvas.width = 640;
         canvas.height = 360;
         canvas.style.width = `${640}px`;
-        canvas.style.height = `${480}px`;
+        canvas.style.height = `${360}px`;
         canvas.style.backgroundColor = "white";
         canvas.style.borderRadius = "3px"
 
